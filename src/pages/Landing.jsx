@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 const features = [
-  { icon: '🧘', title: 'Guided Meditations', desc: 'Curated sessions for focus, sleep, and exam anxiety. From 5 to 30 minutes — fit into any schedule.' },
-  { icon: '🌬️', title: 'Breathing Exercises', desc: 'Box breathing, 4-7-8, and deep breathing techniques. Visualised with smooth, calming animations.' },
-  { icon: '📔', title: 'Mood Journal', desc: 'Track how you feel each day with emoji check-ins and brief reflections. Spot patterns over time.' },
-  { icon: '⏱️', title: 'Focus Timer', desc: 'Pomodoro-style timer to help you study smarter. Work in focused sprints, rest with intention.' },
-  { icon: '📈', title: 'Progress Streaks', desc: 'Stay consistent with daily streaks and session counts. Small habits compound into lasting calm.' },
-  { icon: '🎓', title: 'Student-Focused', desc: 'Designed specifically around exam seasons, late nights, and the very real pressure of college stress.' },
+  { icon: '🌷', title: 'Daily Affirmations', desc: 'Positive affirmations for focus, confidence, anxiety and exam stress. A new reminder of your strength every day.' },
+  { icon: '🍥', title: 'Breathing Exercises', desc: 'Box breathing, 4-7-8, and deep breathing techniques. Visualised with smooth, calming animations.' },
+  { icon: '💌', title: 'Mood Journal', desc: 'Track how you feel each day with emoji check-ins and brief reflections. Spot patterns over time.' },
+  { icon: '🎧', title: 'Focus Timer', desc: 'Pomodoro-style timer to help you study smarter. Work in focused sprints, rest with intention.' },
+  { icon: '🧸', title: 'Progress Streaks', desc: 'Stay consistent with daily streaks and session counts. Small habits compound into lasting calm.' },
+  { icon: '🍰', title: 'Made for Students', desc: 'Designed around exam seasons, late nights, and the very real pressure of college stress.' },
 ]
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
@@ -16,61 +16,124 @@ const item = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transiti
 export default function Landing() {
   return (
     <div style={{ position: 'relative', zIndex: 1 }}>
-      {/* ── Hero ── */}
+
+      {/* Hero */}
       <section style={{
-        minHeight: 'calc(100vh - 72px)', paddingTop: 72,
+        minHeight: '100vh',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        textAlign: 'center', padding: '72px 24px 80px',
+        textAlign: 'center', padding: '120px 24px 60px',
       }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <span style={{
-            display: 'inline-block',
-            fontSize: '0.73rem', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase',
-            color: '#8c7fa0',
-            background: 'rgba(255,255,255,0.65)', border: '1px solid rgba(167,139,202,0.25)',
-            padding: '6px 18px', borderRadius: 50, marginBottom: 32,
-            backdropFilter: 'blur(8px)',
-          }}>✦ For students, by students</span>
+        {/* Decorative blobs */}
+        <div style={{ position: 'fixed', top: '15%', left: '5%', width: 200, height: 200, borderRadius: '50%', background: 'rgba(167,139,202,0.12)', filter: 'blur(60px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'fixed', top: '30%', right: '8%', width: 250, height: 250, borderRadius: '50%', background: 'rgba(252,224,236,0.2)', filter: 'blur(70px)', pointerEvents: 'none' }} />
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+
+          {/* Floating aesthetic emojis */}
+          <motion.div
+            animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ position: 'absolute', top: '18%', left: '12%', fontSize: '1.8rem', opacity: 0.6, pointerEvents: 'none' }}>
+            🐇
+          </motion.div>
+          <motion.div
+            animate={{ y: [0, -8, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+            style={{ position: 'absolute', top: '22%', right: '14%', fontSize: '1.6rem', opacity: 0.55, pointerEvents: 'none' }}>
+            🌷
+          </motion.div>
+          <motion.div
+            animate={{ y: [0, -12, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+            style={{ position: 'absolute', top: '60%', left: '8%', fontSize: '1.5rem', opacity: 0.5, pointerEvents: 'none' }}>
+            🍓
+          </motion.div>
+          <motion.div
+            animate={{ y: [0, -9, 0] }} transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+            style={{ position: 'absolute', top: '55%', right: '10%', fontSize: '1.6rem', opacity: 0.5, pointerEvents: 'none' }}>
+            ✮
+          </motion.div>
+          <motion.div
+            animate={{ y: [0, -7, 0] }} transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+            style={{ position: 'absolute', top: '75%', left: '18%', fontSize: '1.4rem', opacity: 0.45, pointerEvents: 'none' }}>
+            🍥
+          </motion.div>
+          <motion.div
+            animate={{ y: [0, -11, 0] }} transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+            style={{ position: 'absolute', top: '78%', right: '16%', fontSize: '1.4rem', opacity: 0.45, pointerEvents: 'none' }}>
+            🧸
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+            style={{ fontSize: '0.82rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#a78bca', marginBottom: 28, fontWeight: 500 }}>
+            ✮ SerenSpace ✮
+          </motion.p>
 
           <h1 style={{
             fontFamily: '"Cormorant Garamond", serif',
-            fontSize: 'clamp(3rem, 7vw, 5.5rem)',
-            fontWeight: 400, fontStyle: 'italic',
-            lineHeight: 1.1, color: '#2d2538',
-            letterSpacing: '-0.02em', marginBottom: 20,
+            fontSize: 'clamp(3.2rem, 8vw, 6rem)',
+            fontWeight: 300, lineHeight: 1.05,
+            color: '#2d2538', letterSpacing: '-0.03em',
+            marginBottom: 24,
           }}>
-            Your space to<br /><span style={{ color: '#a78bca' }}>breathe & reset</span>
+            Find your calm<br />
+            <span style={{
+              fontStyle: 'italic',
+              background: 'linear-gradient(135deg, #a78bca, #c4a0d8)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            }}>in the chaos 🌷</span>
           </h1>
 
-          <p style={{ fontSize: '1.1rem', color: '#8c7fa0', marginBottom: 44, fontWeight: 300, letterSpacing: '0.02em' }}>
-            Breathe. Be still. Begin again.
-          </p>
+          <motion.p
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+            style={{
+              fontSize: '1.05rem', color: '#8c7fa0',
+              fontWeight: 300, maxWidth: 420,
+              margin: '0 auto 52px', lineHeight: 1.7,
+            }}>
+            ˚ A mindfulness companion for students navigating stress, exams, and everything in between ˚
+          </motion.p>
 
-          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link to="/signup" className="btn-primary">✦ Start for free</Link>
-            <Link to="/login"  className="btn-secondary">Sign in →</Link>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+            style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Link to="/signup" className="btn-primary" style={{ padding: '14px 32px', fontSize: '0.95rem' }}>🌷 Begin your journey</Link>
+            <Link to="/login" className="btn-secondary" style={{ padding: '14px 28px', fontSize: '0.95rem' }}>Sign in →</Link>
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
+            style={{ marginTop: 48, fontSize: '0.78rem', color: '#c0b4d0', letterSpacing: '0.1em' }}>
+            ⋆ ˚｡⋆୨♡୧⋆ ˚｡⋆
+          </motion.p>
         </motion.div>
       </section>
 
-      {/* ── Features ── */}
-      <section style={{ padding: '80px 24px 100px', maxWidth: 1100, margin: '0 auto' }}>
-        <p className="section-label" style={{ textAlign: 'center', marginBottom: 10 }}>Why SerenSpace</p>
-        <h2 style={{
-          fontFamily: '"Cormorant Garamond", serif',
-          fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 400,
-          textAlign: 'center', color: '#2d2538', marginBottom: 56, lineHeight: 1.2,
-        }}>
-          Built for the chaos of <em>college life</em>
-        </h2>
+      {/* Features */}
+      <section style={{ padding: '0 24px 120px', maxWidth: 1100, margin: '0 auto' }}>
+        <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ textAlign: 'center', marginBottom: 48 }}>
+          <h2 style={{
+            fontFamily: '"Cormorant Garamond", serif',
+            fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 400,
+            color: '#2d2538', lineHeight: 1.2, marginBottom: 12,
+          }}>
+            Everything you need to <em>feel better</em> 🍰
+          </h2>
+          <p style={{ color: '#8c7fa0', fontSize: '0.9rem', maxWidth: 380, margin: '0 auto' }}>
+            ˚ Simple tools that help when deadlines pile up ˚
+          </p>
+        </motion.div>
 
         <motion.div
           variants={container} initial="hidden" whileInView="show" viewport={{ once: true }}
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}
-        >
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
           {features.map((f) => (
-            <motion.div key={f.title} variants={item} className="glass-card" style={{ padding: '32px 28px' }}>
+            <motion.div key={f.title} variants={item} style={{
+              padding: '32px 28px',
+              borderRadius: 20,
+              background: 'rgba(255,255,255,0.35)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255,255,255,0.6)',
+            }}>
               <div style={{
                 width: 48, height: 48, borderRadius: 14, fontSize: '1.4rem',
                 background: 'rgba(167,139,202,0.12)',
@@ -81,6 +144,24 @@ export default function Landing() {
               <p style={{ fontSize: '0.88rem', color: '#8c7fa0', lineHeight: 1.7 }}>{f.desc}</p>
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          style={{ textAlign: 'center', marginTop: 72 }}>
+          <p style={{ fontSize: '1.2rem', color: '#c0b4d0', marginBottom: 16, letterSpacing: '0.1em' }}>
+            ⋆｡°✩ ˚ ༘ ♡
+          </p>
+          <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '1.8rem', fontStyle: 'italic', color: '#2d2538', marginBottom: 24 }}>
+            Ready to begin? 🌷
+          </p>
+          <Link to="/signup" className="btn-primary" style={{ padding: '14px 36px', fontSize: '0.95rem' }}>
+            ✨ Create your free account
+          </Link>
+          <p style={{ marginTop: 24, fontSize: '0.78rem', color: '#c0b4d0', letterSpacing: '0.1em' }}>
+            🐇 free forever · 💌 no spam · 🧸 just calm
+          </p>
         </motion.div>
       </section>
     </div>

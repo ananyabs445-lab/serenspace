@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { useState, useEffect } from 'react'
 
 const quotes = [
   { text: "You don't have to control your thoughts. You just have to stop letting them control you.", author: 'Dan Millman' },
@@ -13,18 +14,68 @@ const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } 
 const fadeItem  = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.45 } } }
 
 export default function Dashboard() {
-  const { user } = useAuth()
+  const { user, getAuthHeader } = useAuth()
   const navigate = useNavigate()
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
   const firstName = user?.name?.split(' ')[0] || 'friend'
   const quote = quotes[new Date().getDate() % quotes.length]
 
+  const [stats, setStats] = useState({
+    streak: 0,
+    totalSessions: 0,
+    timePracticed: 0,
+    journalEntries: 0,
+  })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const [journalRes] = await Promise.all([
+          fetch(`${import.meta.env.VITE_API_URL}/api/journal`, { headers: getAuthHeader() }),
+        ])
+        const journalData = await journalRes.json()
+        const journalCount = Array.isArray(journalData) ? journalData.length : 0
+
+        // Calculate streak from journal entries
+        let streak = 0
+        if (Array.isArray(journalData) && journalData.length > 0) {
+          const today = new Date()
+          today.setHours(0, 0, 0, 0)
+          const dates = journalData
+            .map(e => { const d = new Date(e.createdAt); d.setHours(0,0,0,0); return d.getTime() })
+            .filter((v, i, a) => a.indexOf(v) === i)
+            .sort((a, b) => b - a)
+
+          let current = today.getTime()
+          for (const date of dates) {
+            if (date === current) { streak++; current -= 86400000 }
+            else if (date === current + 86400000) { streak++; current = date - 86400000 }
+            else break
+          }
+        }
+
+        setStats({
+          streak,
+          totalSessions: user?.totalSessions || 0,
+          timePracticed: ((user?.totalSessions || 0) * 10 / 60).toFixed(1),
+          journalEntries: journalCount,
+        })
+      } catch (err) {
+        console.error('Failed to fetch stats', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchStats()
+  }, [])
+
   const features = [
-    { icon: '🎵', title: 'Meditation Library', desc: 'Browse guided sessions for focus, sleep, and anxiety.', path: '/library' },
-    { icon: '🌬️', title: 'Breathe',           desc: 'Calm your nervous system with guided breathing.',       path: '/breathe' },
-    { icon: '📔', title: 'Mood Journal',       desc: 'Check in with how you\'re feeling today.',              path: '/journal' },
-    { icon: '⏱️', title: 'Focus Timer',        desc: 'Study smarter with Pomodoro sprints.',                  path: '/timer'   },
+    { icon: '✨', title: 'Affirmations',  desc: 'Daily affirmations to boost confidence and calm.', path: '/library' },
+    { icon: '🌬️', title: 'Breathe',       desc: 'Calm your nervous system with guided breathing.',  path: '/breathe' },
+    { icon: '📔', title: 'Mood Journal',  desc: "Check in with how you're feeling today.",           path: '/journal' },
+    { icon: '⏱️', title: 'Focus Timer',   desc: 'Study smarter with Pomodoro sprints.',              path: '/timer'   },
   ]
 
   return (
@@ -41,10 +92,10 @@ export default function Dashboard() {
       <motion.div variants={container} initial="hidden" animate="show"
         style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 24 }}>
         {[
-          { label: 'Current Streak', value: '7', unit: 'days 🔥' },
-          { label: 'Total Sessions', value: '34', unit: 'meditations' },
-          { label: 'Time Practiced', value: '4.2', unit: 'hours total' },
-          { label: 'Focus Sessions', value: '18', unit: 'pomodoros' },
+          { label: 'Current Streak',  value: loading ? '...' : stats.streak,         unit: 'days 🔥' },
+          { label: 'Focus Sessions',  value: loading ? '...' : stats.totalSessions,   unit: 'pomodoros' },
+          { label: 'Time Practiced',  value: loading ? '...' : stats.timePracticed,   unit: 'hours total' },
+          { label: 'Journal Entries', value: loading ? '...' : stats.journalEntries,  unit: 'check-ins' },
         ].map(s => (
           <motion.div key={s.label} variants={fadeItem} className="glass-card" style={{ padding: '24px 22px' }}>
             <p className="section-label" style={{ marginBottom: 8 }}>{s.label}</p>

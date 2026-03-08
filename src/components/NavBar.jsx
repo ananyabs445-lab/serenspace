@@ -35,7 +35,7 @@ export default function NavBar() {
         {user ? (
           <>
             <Link to="/dashboard" className={isActive('/dashboard')}>Dashboard</Link>
-            <Link to="/library"   className={isActive('/library')}>Meditate</Link>
+            <Link to="/library"   className={isActive('/library')}>Affirmations</Link>
             <Link to="/breathe"   className={isActive('/breathe')}>Breathe</Link>
             <Link to="/journal"   className={isActive('/journal')}>Journal</Link>
             <Link to="/timer"     className={isActive('/timer')}>Focus</Link>

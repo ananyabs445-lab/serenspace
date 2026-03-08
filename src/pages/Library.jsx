@@ -1,129 +1,238 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useAuth } from '../context/AuthContext'
 
-const MOCK_SESSIONS = [
-  { _id: '1', title: 'Morning Clarity',    category: 'Focus',       duration: 10, emoji: '☀️', description: 'Start your day with a clear, focused mind. Gentle awareness meditation.' },
-  { _id: '2', title: 'Exam Eve Calm',      category: 'Exam Stress', duration: 15, emoji: '📚', description: 'Settle pre-exam anxiety and build confidence for tomorrow.' },
-  { _id: '3', title: 'Deep Sleep Drift',   category: 'Sleep',       duration: 20, emoji: '🌙', description: 'A slow, guided body scan to ease you gently into sleep.' },
-  { _id: '4', title: 'Anxiety Release',    category: 'Anxiety',     duration: 12, emoji: '🌊', description: 'Progressive relaxation to loosen tension held in the body.' },
-  { _id: '5', title: 'Study Focus',        category: 'Focus',       duration: 8,  emoji: '🎯', description: 'A short session to sharpen attention before a study sprint.' },
-  { _id: '6', title: 'Stress Unwind',      category: 'Exam Stress', duration: 18, emoji: '🍃', description: 'Release the weight of the day and return to yourself.' },
-  { _id: '7', title: 'Restful Night',      category: 'Sleep',       duration: 25, emoji: '⭐', description: "Slow breathing and visualisation for a full night's rest." },
-  { _id: '8', title: 'Social Anxiety Ease',category: 'Anxiety',     duration: 10, emoji: '🕊️', description: 'Build inner steadiness before presentations or social events.' },
-  { _id: '9', title: 'Present Moment',     category: 'Focus',       duration: 5,  emoji: '🔵', description: 'A quick reset to anchor you in the here and now.' },
-]
-const CATEGORIES = ['All', 'Focus', 'Sleep', 'Anxiety', 'Exam Stress']
+const AFFIRMATIONS = {
+  Focus: [
+    "My mind is clear, calm and focused.",
+    "I concentrate easily and absorb information quickly.",
+    "Every study session brings me closer to my goals.",
+    "I am fully present in this moment.",
+    "My attention is sharp and my memory is strong.",
+    "I work with purpose and intention today.",
+  ],
+  Anxiety: [
+    "I am safe. I am calm. I am in control.",
+    "This feeling will pass. I have survived hard days before.",
+    "I breathe in peace and breathe out tension.",
+    "My anxiety does not define me or my future.",
+    "I am bigger than my worries.",
+    "One step at a time is enough for me.",
+  ],
+  Confidence: [
+    "I am capable of achieving everything I set my mind to.",
+    "I believe in my own strength and resilience.",
+    "I am enough, exactly as I am right now.",
+    "My voice matters and my ideas have value.",
+    "I face challenges with courage and grace.",
+    "I am proud of how far I have come.",
+  ],
+  'Exam Stress': [
+    "I have prepared well and I trust myself.",
+    "I remain calm and clear during my exams.",
+    "Mistakes are proof that I am trying.",
+    "I recall information easily and write with confidence.",
+    "My best effort is always enough.",
+    "I release all pressure and trust my preparation.",
+  ],
+  Sleep: [
+    "I release today and welcome rest.",
+    "My body knows how to heal and restore itself.",
+    "I deserve deep, peaceful sleep tonight.",
+    "Tomorrow's worries can wait. Tonight I rest.",
+    "I let go of everything that is not mine to carry.",
+    "Peace flows through me as I drift to sleep.",
+  ],
+}
+
+const CATEGORIES = ['Focus', 'Anxiety', 'Confidence', 'Exam Stress', 'Sleep']
+
+const COLORS = {
+  Focus:        { bg: 'linear-gradient(135deg, #e8dff8, #d4e8f8)', accent: '#7b6fa0' },
+  Anxiety:      { bg: 'linear-gradient(135deg, #fce0ec, #fde8d8)', accent: '#c06080' },
+  Confidence:   { bg: 'linear-gradient(135deg, #d4f0e4, #e8f8d4)', accent: '#4a8a6a' },
+  'Exam Stress':{ bg: 'linear-gradient(135deg, #fce0ec, #e8dff8)', accent: '#8a5090' },
+  Sleep:        { bg: 'linear-gradient(135deg, #c8e8f8, #d4d8f8)', accent: '#4a5a9a' },
+}
+
+const ICONS = {
+  Focus: '🎯', Anxiety: '🌊', Confidence: '✨', 'Exam Stress': '📚', Sleep: '🌙'
+}
 
 export default function Library() {
-  const { getAuthHeader } = useAuth()
-  const [sessions, setSessions] = useState(MOCK_SESSIONS)
-  const [filter, setFilter]     = useState('All')
-  const [playing, setPlaying]   = useState(null)
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [category, setCategory] = useState('Focus')
+  const [index, setIndex] = useState(0)
+  const [favourites, setFavourites] = useState([])
+  const [showFavourites, setShowFavourites] = useState(false)
+  const [direction, setDirection] = useState(1)
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/sessions`, { headers: getAuthHeader() })
-      .then(r => r.json()).then(data => { if (Array.isArray(data) && data.length) setSessions(data) })
-      .catch(() => {}) // fallback to mock data
-  }, [])
+  const affirmations = AFFIRMATIONS[category]
+  const current = affirmations[index]
+  const isFavourited = favourites.includes(current)
 
-  const filtered = filter === 'All' ? sessions : sessions.filter(s => s.category === filter)
+  const next = () => {
+    setDirection(1)
+    setIndex(i => (i + 1) % affirmations.length)
+  }
+
+  const prev = () => {
+    setDirection(-1)
+    setIndex(i => (i - 1 + affirmations.length) % affirmations.length)
+  }
+
+  const toggleFavourite = () => {
+    setFavourites(prev =>
+      prev.includes(current)
+        ? prev.filter(f => f !== current)
+        : [...prev, current]
+    )
+  }
+
+  const changeCategory = (cat) => {
+    setCategory(cat)
+    setIndex(0)
+    setShowFavourites(false)
+  }
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '100px 24px 80px', position: 'relative', zIndex: 1 }}>
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: 32 }}>
-        <h2 style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '2.2rem', fontWeight: 400, fontStyle: 'italic', color: '#2d2538' }}>Meditation Library</h2>
-        <p style={{ color: '#8c7fa0', fontSize: '0.88rem', marginTop: 4 }}>Guided sessions to help you focus, sleep better, and ease anxiety.</p>
+    <div style={{ maxWidth: 800, margin: '0 auto', padding: '100px 24px 80px', position: 'relative', zIndex: 1 }}>
+
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: 32, textAlign: 'center' }}>
+        <h2 style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '2.2rem', fontWeight: 400, fontStyle: 'italic', color: '#2d2538' }}>
+          Daily Affirmations
+        </h2>
+        <p style={{ color: '#8c7fa0', fontSize: '0.88rem', marginTop: 4 }}>
+          Gentle reminders of your strength and calm.
+        </p>
       </motion.div>
 
-      {/* Filter chips */}
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 28 }}>
+      {/* Category chips */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 40 }}>
         {CATEGORIES.map(cat => (
-          <button key={cat} className={`chip ${filter === cat ? 'active' : ''}`} onClick={() => setFilter(cat)}>{cat}</button>
+          <button key={cat} className={`chip ${category === cat && !showFavourites ? 'active' : ''}`}
+            onClick={() => changeCategory(cat)}>
+            {ICONS[cat]} {cat}
+          </button>
         ))}
+        <button className={`chip ${showFavourites ? 'active' : ''}`}
+          onClick={() => setShowFavourites(s => !s)}>
+          ♥ Saved ({favourites.length})
+        </button>
       </div>
 
-      {/* Grid */}
-      <motion.div layout style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 18 }}>
-        <AnimatePresence>
-          {filtered.map((s, i) => (
-            <motion.div key={s._id}
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-              transition={{ delay: i * 0.06 }}
-              className="glass-card" style={{ padding: 24, cursor: 'pointer' }}
-              onClick={() => { setPlaying(s); setIsPlaying(false) }}>
-              <span style={{
-                display: 'inline-block', fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.12em',
-                textTransform: 'uppercase', padding: '4px 10px', borderRadius: 50,
-                background: 'rgba(167,139,202,0.14)', color: '#8b6ab0', marginBottom: 12,
-              }}>{s.category}</span>
-              <h3 style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '1.15rem', fontWeight: 600, color: '#2d2538', marginBottom: 6 }}>{s.title}</h3>
-              <p style={{ fontSize: '0.82rem', color: '#8c7fa0', marginBottom: 16, lineHeight: 1.55 }}>{s.description}</p>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.78rem', color: '#8c7fa0' }}>⏱ {s.duration} min</span>
-                <button onClick={e => { e.stopPropagation(); setPlaying(s); setIsPlaying(false) }} style={{
-                  width: 36, height: 36, borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #a78bca, #c4a0d8)',
-                  border: 'none', cursor: 'pointer', color: 'white', fontSize: '0.85rem',
-                  boxShadow: '0 3px 12px rgba(167,139,202,0.35)', transition: 'transform 0.2s',
-                }}>▶</button>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
-
-      {/* Player overlay */}
-      <AnimatePresence>
-        {playing && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            onClick={e => { if (e.target === e.currentTarget) { setPlaying(null); setIsPlaying(false) } }}
-            style={{
-              position: 'fixed', inset: 0, zIndex: 200,
-              background: 'rgba(45,37,56,0.55)', backdropFilter: 'blur(8px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
-            }}>
-            <motion.div initial={{ opacity: 0, scale: 0.93 }} animate={{ opacity: 1, scale: 1 }}
+      {/* Main affirmation card */}
+      {!showFavourites ? (
+        <div style={{ position: 'relative' }}>
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={category + index}
+              custom={direction}
+              initial={{ opacity: 0, x: direction * 60 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction * -60 }}
+              transition={{ duration: 0.35, ease: 'easeInOut' }}
               style={{
-                width: '100%', maxWidth: 400, position: 'relative',
-                background: 'rgba(255,255,255,0.94)', backdropFilter: 'blur(20px)',
-                borderRadius: 24, padding: '44px 36px', textAlign: 'center',
-                boxShadow: '0 20px 60px rgba(45,37,56,0.2)',
+                background: COLORS[category].bg,
+                borderRadius: 24,
+                padding: '60px 48px',
+                textAlign: 'center',
+                border: '1px solid rgba(255,255,255,0.8)',
+                boxShadow: '0 8px 40px rgba(167,139,202,0.15)',
+                minHeight: 240,
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                position: 'relative',
               }}>
-              <button onClick={() => { setPlaying(null); setIsPlaying(false) }} style={{
-                position: 'absolute', top: 16, right: 16,
-                background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: '1.1rem', color: '#8c7fa0', padding: 8,
-              }}>✕</button>
 
-              <motion.div animate={{ rotate: isPlaying ? 360 : 0 }} transition={{ duration: 20, repeat: Infinity, ease: 'linear', repeatType: 'loop' }}
-                style={{
-                  width: 100, height: 100, borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #e8dff8, #fce0ec)',
-                  margin: '0 auto 20px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '2.5rem', boxShadow: '0 4px 20px rgba(167,139,202,0.25)',
-                }}>{playing.emoji}</motion.div>
+              {/* Favourite button */}
+              <button onClick={toggleFavourite} style={{
+                position: 'absolute', top: 20, right: 20,
+                background: 'rgba(255,255,255,0.6)', border: 'none',
+                borderRadius: '50%', width: 40, height: 40,
+                cursor: 'pointer', fontSize: '1.1rem',
+                backdropFilter: 'blur(8px)',
+                transition: 'transform 0.2s',
+              }}>
+                {isFavourited ? '♥' : '♡'}
+              </button>
 
-              <h3 style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '1.6rem', color: '#2d2538', marginBottom: 4 }}>{playing.title}</h3>
-              <p style={{ fontSize: '0.82rem', color: '#8c7fa0', marginBottom: 28 }}>{playing.category} · {playing.duration} min</p>
+              {/* Category icon */}
+              <div style={{ fontSize: '2.5rem', marginBottom: 24 }}>{ICONS[category]}</div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14 }}>
-                <button style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(167,139,202,0.12)', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#8c7fa0' }}>↩</button>
-                <button onClick={() => setIsPlaying(p => !p)} style={{
-                  width: 56, height: 56, borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #a78bca, #c4a0d8)',
-                  border: 'none', cursor: 'pointer', color: 'white', fontSize: '1.2rem',
-                  boxShadow: '0 6px 20px rgba(167,139,202,0.4)',
-                }}>{isPlaying ? '⏸' : '▶'}</button>
-                <button style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(167,139,202,0.12)', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#8c7fa0' }}>↪</button>
-              </div>
-              <p style={{ fontSize: '0.72rem', color: '#c0b4d0', marginTop: 20, letterSpacing: '0.05em' }}>Audio via GET /api/sessions/:id</p>
+              {/* Affirmation text */}
+              <p style={{
+                fontFamily: '"Cormorant Garamond", serif',
+                fontSize: 'clamp(1.4rem, 3vw, 2rem)',
+                fontStyle: 'italic',
+                fontWeight: 400,
+                color: COLORS[category].accent,
+                lineHeight: 1.5,
+                maxWidth: 500,
+              }}>
+                "{current}"
+              </p>
+
+              {/* Counter */}
+              <p style={{ fontSize: '0.72rem', color: '#8c7fa0', marginTop: 24, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                {index + 1} of {affirmations.length}
+              </p>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </AnimatePresence>
+
+          {/* Navigation */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 14, marginTop: 28 }}>
+            <button onClick={prev} className="btn-secondary" style={{ padding: '10px 24px' }}>
+              ← Previous
+            </button>
+            <button onClick={next} className="btn-primary" style={{ padding: '10px 24px' }}>
+              Next →
+            </button>
+          </div>
+
+          {/* Dots */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 18 }}>
+            {affirmations.map((_, i) => (
+              <button key={i} onClick={() => setIndex(i)} style={{
+                width: i === index ? 20 : 8, height: 8,
+                borderRadius: 50, border: 'none', cursor: 'pointer',
+                background: i === index ? '#a78bca' : 'rgba(167,139,202,0.25)',
+                transition: 'all 0.3s',
+                padding: 0,
+              }} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* Favourites grid */
+        <div>
+          {favourites.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '60px 24px' }}>
+              <p style={{ fontSize: '2rem', marginBottom: 12 }}>♡</p>
+              <p style={{ color: '#8c7fa0', fontSize: '0.9rem' }}>No saved affirmations yet.</p>
+              <p style={{ color: '#c0b4d0', fontSize: '0.82rem', marginTop: 4 }}>Tap the heart on any card to save it!</p>
+            </div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+              {favourites.map((fav, i) => (
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06 }}
+                  className="glass-card" style={{ padding: '24px 22px', position: 'relative' }}>
+                  <button onClick={() => setFavourites(prev => prev.filter(f => f !== fav))}
+                    style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#c06080' }}>
+                    ♥
+                  </button>
+                  <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '1.1rem', fontStyle: 'italic', color: '#2d2538', lineHeight: 1.6 }}>
+                    "{fav}"
+                  </p>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

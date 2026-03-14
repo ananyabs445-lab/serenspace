@@ -51,6 +51,13 @@ export default function NavBar() {
           </>
         ) : (
           <>
+            <Link to="/about" style={{
+              padding: '8px 18px', borderRadius: 50,
+              background: 'rgba(167,139,202,0.15)',
+              fontFamily: '"DM Sans", sans-serif',
+              fontSize: '0.85rem', fontWeight: 500,
+              color: '#6b4f8a', textDecoration: 'none',
+            }}>About</Link>
             <Link to="/login" style={{
               padding: '8px 18px', borderRadius: 50,
               background: 'rgba(167,139,202,0.15)',

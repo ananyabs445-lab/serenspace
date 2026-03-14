@@ -1,46 +1,41 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState } from 'react'
 
-const AuthContext = createContext(null)
+const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('seren_user')) } catch { return null }
+  })
 
-  useEffect(() => {
-    const token = localStorage.getItem('seren_token')
-    const savedUser = localStorage.getItem('seren_user')
-    if (token && savedUser) {
-      setUser(JSON.parse(savedUser))
-    }
-    setLoading(false)
-  }, [])
-
-  const login = async (email, password) => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.message || 'Login failed')
-    localStorage.setItem('seren_token', data.token)
-    localStorage.setItem('seren_user', JSON.stringify(data.user))
-    setUser(data.user)
-    return data.user
-  }
+  const getAuthHeader = () => ({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('seren_token')}`
+  })
 
   const register = async (name, email, password) => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password })
     })
     const data = await res.json()
     if (!res.ok) throw new Error(data.message || 'Registration failed')
     localStorage.setItem('seren_token', data.token)
     localStorage.setItem('seren_user', JSON.stringify(data.user))
     setUser(data.user)
-    return data.user
+  }
+
+  const login = async (email, password) => {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.message || 'Login failed')
+    localStorage.setItem('seren_token', data.token)
+    localStorage.setItem('seren_user', JSON.stringify(data.user))
+    setUser(data.user)
   }
 
   const logout = () => {
@@ -49,13 +44,8 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
-  const getAuthHeader = () => ({
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('seren_token')}`,
-  })
-
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading, getAuthHeader }}>
+    <AuthContext.Provider value={{ user, register, login, logout, getAuthHeader }}>
       {children}
     </AuthContext.Provider>
   )

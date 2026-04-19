@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { ThemeProvider } from './context/ThemeContext'
 import NavBar from './components/NavBar'
 import Footer from './components/Footer'
 import FAB from './components/FAB'
@@ -17,7 +18,7 @@ import About     from './pages/About'
 function AppContent() {
   const { user } = useAuth()
   return (
-    <div className="aurora-bg">
+    <>
       <NavBar />
       <Routes>
         <Route path="/"          element={<Landing />} />
@@ -33,7 +34,7 @@ function AppContent() {
       </Routes>
       <Footer />
       {user && <FAB />}
-    </div>
+    </>
   )
 }
 
@@ -41,7 +42,9 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <AppContent />
+        <ThemeProvider>
+          <AppContent />
+        </ThemeProvider>
       </BrowserRouter>
     </AuthProvider>
   )

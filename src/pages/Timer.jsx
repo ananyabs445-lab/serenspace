@@ -1,20 +1,73 @@
 import { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 
 const WORK_SECS  = 25 * 60
 const BREAK_SECS = 5 * 60
-const CIRCUM     = 2 * Math.PI * 110   // r=110 → 691.15
+const CIRCUM     = 2 * Math.PI * 110
+
+const TRACKS = [
+  { name: 'Lofi Study Beats', emoji: '🎵', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+  { name: 'Calm Piano', emoji: '🎹', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+  { name: 'Nature Sounds', emoji: '🌿', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+  { name: 'Deep Focus', emoji: '🔮', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+]
 
 export default function Timer() {
   const { getAuthHeader } = useAuth()
-  const [mode, setMode]         = useState('work')       // 'work' | 'break'
+  const [mode, setMode]         = useState('work')
   const [timeLeft, setTimeLeft] = useState(WORK_SECS)
   const [running, setRunning]   = useState(false)
   const [sessions, setSessions] = useState([])
   const [toast, setToast]       = useState('')
-  const intervalRef             = useRef(null)
-  const total                   = mode === 'work' ? WORK_SECS : BREAK_SECS
+
+  // Music
+  const [musicOn, setMusicOn]       = useState(false)
+  const [trackIdx, setTrackIdx]     = useState(0)
+  const [volume, setVolume]         = useState(0.4)
+  const [musicExpanded, setMusicExpanded] = useState(false)
+  const audioRef                    = useRef(null)
+  const intervalRef                 = useRef(null)
+  const total                       = mode === 'work' ? WORK_SECS : BREAK_SECS
+
+  // Audio setup
+  useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(TRACKS[trackIdx].url)
+      audioRef.current.loop = true
+      audioRef.current.volume = volume
+    }
+    return () => {
+      audioRef.current?.pause()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume
+    }
+  }, [volume])
+
+  const playTrack = (idx) => {
+    setTrackIdx(idx)
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = new Audio(TRACKS[idx].url)
+      audioRef.current.loop = true
+      audioRef.current.volume = volume
+      if (musicOn) audioRef.current.play()
+    }
+  }
+
+  const toggleMusic = () => {
+    if (musicOn) {
+      audioRef.current?.pause()
+      setMusicOn(false)
+    } else {
+      audioRef.current?.play()
+      setMusicOn(true)
+    }
+  }
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2800) }
 
@@ -136,24 +189,112 @@ export default function Timer() {
             {mins}:{secs}
           </span>
           <span className="section-label" style={{ marginTop: 8 }}>{mode === 'work' ? 'Focus' : 'Break'}</span>
+          {musicOn && (
+            <motion.span
+              animate={{ opacity: [1, 0.4, 1] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+              style={{ fontSize: '0.75rem', color: '#a78bca', marginTop: 6 }}>
+              🎵 {TRACKS[trackIdx].name}
+            </motion.span>
+          )}
         </div>
       </div>
 
       {/* Controls */}
-      <div style={{ display: 'flex', gap: 14, marginBottom: 44 }}>
+      <div style={{ display: 'flex', gap: 14, marginBottom: 28 }}>
         <button onClick={toggle} className="btn-primary">
           {running ? 'Pause' : timeLeft === total ? 'Start' : 'Resume'}
         </button>
         <button onClick={reset} className="btn-secondary">Reset</button>
       </div>
 
+      {/* Music Player */}
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+        className="glass-card-static"
+        style={{ width: '100%', padding: '20px 24px', marginBottom: 32, borderRadius: 20 }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: musicExpanded ? 16 : 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <motion.span
+              animate={{ rotate: musicOn ? 360 : 0 }}
+              transition={{ repeat: musicOn ? Infinity : 0, duration: 3, ease: 'linear' }}
+              style={{ fontSize: '1.3rem', display: 'inline-block' }}>
+              🎵
+            </motion.span>
+            <div>
+              <p style={{ fontSize: '0.88rem', fontWeight: 600, color: '#2d2538' }}>Study Music</p>
+              <p style={{ fontSize: '0.75rem', color: '#8c7fa0' }}>{musicOn ? `Playing: ${TRACKS[trackIdx].name}` : 'Off'}</p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <button onClick={toggleMusic} style={{
+              background: musicOn ? 'linear-gradient(135deg, #a78bca, #c4a0d8)' : 'rgba(167,139,202,0.12)',
+              border: 'none', borderRadius: 50, padding: '8px 18px',
+              fontSize: '0.82rem', fontWeight: 600,
+              color: musicOn ? 'white' : '#a78bca',
+              cursor: 'pointer', fontFamily: '"DM Sans", sans-serif',
+            }}>{musicOn ? '⏸ Pause' : '▶ Play'}</button>
+            <button onClick={() => setMusicExpanded(o => !o)} style={{
+              background: 'rgba(167,139,202,0.1)', border: 'none',
+              borderRadius: 50, width: 32, height: 32,
+              cursor: 'pointer', color: '#8c7fa0', fontSize: '0.8rem',
+            }}>{musicExpanded ? '▲' : '▼'}</button>
+          </div>
+        </div>
+
+        {/* Expanded */}
+        <AnimatePresence>
+          {musicExpanded && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              style={{ overflow: 'hidden' }}>
+
+              {/* Track list */}
+              <p style={{ fontSize: '0.72rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#8c7fa0', marginBottom: 10 }}>Choose Track</p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
+                {TRACKS.map((t, i) => (
+                  <button key={i} onClick={() => playTrack(i)} style={{
+                    padding: '10px 14px', borderRadius: 12,
+                    border: `1.5px solid ${trackIdx === i ? '#a78bca' : 'transparent'}`,
+                    background: trackIdx === i ? 'rgba(167,139,202,0.12)' : 'rgba(255,255,255,0.5)',
+                    cursor: 'pointer', textAlign: 'left',
+                    fontFamily: '"DM Sans", sans-serif',
+                    display: 'flex', alignItems: 'center', gap: 8,
+                  }}>
+                    <span style={{ fontSize: '1.1rem' }}>{t.emoji}</span>
+                    <span style={{ fontSize: '0.78rem', fontWeight: trackIdx === i ? 600 : 400, color: trackIdx === i ? '#a78bca' : '#2d2538' }}>{t.name}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Volume */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: '0.75rem', color: '#8c7fa0' }}>🔈</span>
+                <input
+                  type="range" min="0" max="1" step="0.05"
+                  value={volume}
+                  onChange={e => setVolume(parseFloat(e.target.value))}
+                  style={{ flex: 1, accentColor: '#a78bca', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '0.75rem', color: '#8c7fa0' }}>🔊</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
       {/* Session log */}
       <div style={{ width: '100%' }}>
         <p className="section-label" style={{ marginBottom: 12 }}>Today's sessions</p>
-        {sessions.length === 0 && (
-          <p style={{ fontSize: '0.85rem', color: '#c0b4d0', textAlign: 'center', padding: '20px 0' }}>No sessions yet. Start focusing!</p>
-        )}
-        {sessions.map((s, i) => (
+        {sessions.length === 0 ? (
+          <div className="glass-card" style={{ padding: '24px', textAlign: 'center' }}>
+            <p style={{ fontSize: '1.5rem', marginBottom: 8 }}>⏱️</p>
+            <p style={{ color: '#8c7fa0', fontSize: '0.88rem' }}>No sessions yet. Start focusing!</p>
+          </div>
+        ) : sessions.map((s, i) => (
           <motion.div key={i} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
             className="glass-card" style={{ padding: '14px 18px', marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.85rem', color: '#2d2538' }}>

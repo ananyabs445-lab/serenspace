@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts'
 import { useAuth } from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const MOODS = [
   { emoji: '😌', label: 'Peaceful',  score: 5 },
@@ -14,10 +15,21 @@ const MOODS = [
   { emoji: '😤', label: 'Stressed',  score: 1 },
 ]
 
+const MOOD_SUGGESTIONS = {
+  'Peaceful':  { message: "You're in a great headspace 🌿 Keep it going!", action: 'Journal more', path: null, color: '#d4f0e4' },
+  'Happy':     { message: "Amazing! Ride this energy 🔥 Start a focus session!", action: 'Start Focus', path: '/timer', color: '#fce0ec' },
+  'Energised': { message: "Channel that energy! A Pomodoro session will maximize it ⚡", action: 'Start Focus', path: '/timer', color: '#fce0ec' },
+  'Neutral':   { message: "A short breathing exercise can lift your mood 🌬️", action: 'Try Breathing', path: '/breathe', color: '#c8e8f8' },
+  'Tired':     { message: "You seem tired 😴 Box breathing can restore your energy.", action: 'Try Breathing', path: '/breathe', color: '#c8e8f8' },
+  'Worried':   { message: "Take a deep breath 🌿 4-7-8 breathing reduces anxiety fast.", action: 'Try Breathing', path: '/breathe', color: '#e8dff8' },
+  'Low':       { message: "Daily affirmations can help shift your mindset 💜", action: 'View Affirmations', path: '/library', color: '#e8dff8' },
+  'Stressed':  { message: "You seem stressed 😟 Box breathing for 2 minutes can really help.", action: 'Try Breathing', path: '/breathe', color: '#fce0ec' },
+}
+
 const MOCK_ENTRIES = [
   { mood: '😌', moodLabel: 'Peaceful',  reflection: 'Felt calm after the morning meditation. Exam prep going okay.', createdAt: '2026-02-27' },
   { mood: '😤', moodLabel: 'Stressed',  reflection: 'Stressed about the upcoming test but did box breathing — helped.', createdAt: '2026-02-26' },
-  { mood: '😊', moodLabel: 'Happy',     reflection: 'Really good day overall. 25 min focus session felt great.',          createdAt: '2026-02-25' },
+  { mood: '😊', moodLabel: 'Happy',     reflection: 'Really good day overall. 25 min focus session felt great.', createdAt: '2026-02-25' },
 ]
 
 const MOCK_CHART = [
@@ -33,18 +45,52 @@ const CustomDot = (props) => {
 
 export default function Journal() {
   const { getAuthHeader } = useAuth()
+  const navigate = useNavigate()
   const [selected, setSelected]   = useState(null)
   const [text, setText]           = useState('')
   const [entries, setEntries]     = useState(MOCK_ENTRIES)
-  const [chartData]               = useState(MOCK_CHART)
+  const [chartData, setChartData] = useState(MOCK_CHART)
   const [submitting, setSubmitting] = useState(false)
   const [toast, setToast]         = useState('')
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/journal`, { headers: getAuthHeader() })
-      .then(r => r.json()).then(d => { if (Array.isArray(d) && d.length) setEntries(d) })
+      .then(r => r.json())
+      .then(d => {
+        if (Array.isArray(d) && d.length) {
+          setEntries(d)
+          // Build real chart from entries
+          const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+          const last7 = [...Array(7)].map((_, i) => {
+            const date = new Date()
+            date.setDate(date.getDate() - (6 - i))
+            return { day: days[date.getDay()], date: date.toISOString().slice(0,10), mood: 0, count: 0 }
+          })
+          d.forEach(entry => {
+            const idx = last7.findIndex(x => x.date === entry.createdAt?.slice(0,10))
+            if (idx !== -1) {
+              last7[idx].mood += entry.moodScore || 3
+              last7[idx].count += 1
+            }
+          })
+          setChartData(last7.map(x => ({ day: x.day, mood: x.count ? Math.round(x.mood / x.count) : 0 })))
+        }
+      })
       .catch(() => {})
   }, [])
+
+  // Insight from entries
+  const getMoodInsight = () => {
+    if (entries.length < 2) return null
+    const real = entries.filter(e => e.moodLabel)
+    if (!real.length) return null
+    const counts = {}
+    real.forEach(e => { counts[e.moodLabel] = (counts[e.moodLabel] || 0) + 1 })
+    const top = Object.entries(counts).sort((a,b) => b[1]-a[1])[0]
+    const stressCount = (counts['Stressed'] || 0) + (counts['Worried'] || 0) + (counts['Low'] || 0)
+    if (stressCount >= 2) return `You've felt stressed or low ${stressCount} times recently. Try a breathing session 🌿`
+    return `Your most common mood is "${top[0]}" — ${top[1]} times this week.`
+  }
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500) }
 
@@ -68,6 +114,9 @@ export default function Journal() {
     catch { return d }
   }
 
+  const suggestion = selected ? MOOD_SUGGESTIONS[selected.label] : null
+  const insight = getMoodInsight()
+
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '100px 24px 80px', position: 'relative', zIndex: 1 }}>
       {/* Toast */}
@@ -83,12 +132,21 @@ export default function Journal() {
         <p style={{ color: '#8c7fa0', fontSize: '0.88rem', marginTop: 4 }}>How are you feeling today?</p>
       </motion.div>
 
+      {/* Insight banner */}
+      {insight && (
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+          style={{ background: 'linear-gradient(135deg, rgba(167,139,202,0.15), rgba(252,224,236,0.2))', border: '1px solid rgba(167,139,202,0.2)', borderRadius: 16, padding: '14px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: '1.3rem' }}>🧠</span>
+          <p style={{ fontSize: '0.88rem', color: '#6b4f8a', fontWeight: 500 }}>{insight}</p>
+        </motion.div>
+      )}
+
       {/* Entry form */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
         className="glass-card-static" style={{ padding: '30px 28px 32px', marginBottom: 28 }}>
 
         <p className="section-label" style={{ marginBottom: 14 }}>Select your mood</p>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 26 }}>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
           {MOODS.map(m => (
             <div key={m.emoji} style={{ textAlign: 'center' }}>
               <button onClick={() => setSelected(m)} style={{
@@ -105,6 +163,33 @@ export default function Journal() {
             </div>
           ))}
         </div>
+
+        {/* Mood Suggestion */}
+        <AnimatePresence>
+          {suggestion && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              style={{ overflow: 'hidden', marginBottom: 20 }}>
+              <div style={{
+                background: suggestion.color,
+                borderRadius: 14, padding: '14px 18px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12,
+              }}>
+                <p style={{ fontSize: '0.88rem', color: '#2d2538', fontWeight: 500 }}>💡 {suggestion.message}</p>
+                {suggestion.path && (
+                  <button onClick={() => navigate(suggestion.path)} style={{
+                    background: 'rgba(167,139,202,0.3)', border: 'none', borderRadius: 50,
+                    padding: '7px 16px', fontSize: '0.82rem', fontWeight: 600,
+                    color: '#6b4f8a', cursor: 'pointer', whiteSpace: 'nowrap',
+                    fontFamily: '"DM Sans", sans-serif',
+                  }}>{suggestion.action} →</button>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <p className="section-label" style={{ marginBottom: 10 }}>Write a reflection</p>
         <textarea
@@ -132,12 +217,18 @@ export default function Journal() {
         {/* Past entries */}
         <div>
           <p className="section-label" style={{ marginBottom: 14 }}>Past entries</p>
-          {entries.map((e, i) => (
+          {entries.length === 0 ? (
+            <div className="glass-card" style={{ padding: '24px', textAlign: 'center' }}>
+              <p style={{ fontSize: '1.5rem', marginBottom: 8 }}>📔</p>
+              <p style={{ color: '#8c7fa0', fontSize: '0.88rem' }}>No entries yet. Write your first reflection!</p>
+            </div>
+          ) : entries.map((e, i) => (
             <motion.div key={i} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.07 }}
-              className="glass-card" style={{ padding: '14px 18px', marginBottom: 10, display: 'flex', alignItems: 'flex-start', gap: 14, cursor: 'default' }}>
+              className="glass-card" style={{ padding: '14px 18px', marginBottom: 10, display: 'flex', alignItems: 'flex-start', gap: 14 }}>
               <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>{e.mood}</span>
               <div>
                 <p style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#8c7fa0', marginBottom: 3 }}>{formatDate(e.createdAt)}</p>
+                <p style={{ fontSize: '0.78rem', fontWeight: 500, color: '#a78bca', marginBottom: 3 }}>{e.moodLabel}</p>
                 <p style={{ fontSize: '0.85rem', color: '#2d2538', lineHeight: 1.45 }}>{e.reflection || 'No reflection added.'}</p>
               </div>
             </motion.div>
@@ -166,7 +257,6 @@ export default function Journal() {
             </div>
           </motion.div>
         </div>
-
       </div>
     </div>
   )

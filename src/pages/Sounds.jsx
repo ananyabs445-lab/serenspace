@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const SOUNDS = [
@@ -7,9 +7,10 @@ const SOUNDS = [
     emoji: '🌫️',
     color: 'rgba(200,232,248,0.4)',
     tracks: [
-      { name: 'Pure White Noise', emoji: '⬜', url: 'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3' },
-      { name: 'Pink Noise', emoji: '🌸', url: 'https://assets.mixkit.co/active_storage/sfx/2867/2867-preview.mp3' },
-      { name: 'Fan Noise', emoji: '🌀', url: 'https://assets.mixkit.co/active_storage/sfx/2868/2868-preview.mp3' },
+      { name: 'Pure White Noise', emoji: '⬜', videoId: 'nMfPqeZjc2c' },
+      { name: 'Brown Noise', emoji: '🟫', videoId: 'RqzGzwTY-6w' },
+      { name: 'Pink Noise', emoji: '🌸', videoId: 'ZXtimhT-ff4' },
+      { name: 'Fan Noise', emoji: '🌀', videoId: 'L5R67SiAGpQ' },
     ]
   },
   {
@@ -17,10 +18,11 @@ const SOUNDS = [
     emoji: '🌧️',
     color: 'rgba(167,139,202,0.15)',
     tracks: [
-      { name: 'Gentle Rain', emoji: '🌦️', url: 'https://assets.mixkit.co/active_storage/sfx/2515/2515-preview.mp3' },
-      { name: 'Heavy Rain', emoji: '⛈️', url: 'https://assets.mixkit.co/active_storage/sfx/2516/2516-preview.mp3' },
-      { name: 'Ocean Waves', emoji: '🌊', url: 'https://assets.mixkit.co/active_storage/sfx/2517/2517-preview.mp3' },
-      { name: 'River Stream', emoji: '🏞️', url: 'https://assets.mixkit.co/active_storage/sfx/2518/2518-preview.mp3' },
+      { name: 'Gentle Rain', emoji: '🌦️', videoId: 'mPZkdNFkNps' },
+      { name: 'Heavy Rain', emoji: '⛈️', videoId: 'q76bMs-NwRk' },
+      { name: 'Ocean Waves', emoji: '🌊', videoId: 'bn9F19Hi1Lk' },
+      { name: 'River Stream', emoji: '🏞️', videoId: 'LNLkMHdVMiQ' },
+      { name: 'Rain on Window', emoji: '🪟', videoId: '8plwv6RkSqA' },
     ]
   },
   {
@@ -28,10 +30,11 @@ const SOUNDS = [
     emoji: '🌿',
     color: 'rgba(212,240,228,0.4)',
     tracks: [
-      { name: 'Forest Birds', emoji: '🐦', url: 'https://assets.mixkit.co/active_storage/sfx/2519/2519-preview.mp3' },
-      { name: 'Crickets Night', emoji: '🦗', url: 'https://assets.mixkit.co/active_storage/sfx/2520/2520-preview.mp3' },
-      { name: 'Wind in Trees', emoji: '🍃', url: 'https://assets.mixkit.co/active_storage/sfx/2521/2521-preview.mp3' },
-      { name: 'Thunderstorm', emoji: '⚡', url: 'https://assets.mixkit.co/active_storage/sfx/2522/2522-preview.mp3' },
+      { name: 'Forest Birds', emoji: '🐦', videoId: 'Qm846KdZN_c' },
+      { name: 'Crickets Night', emoji: '🦗', videoId: 'eKmR4fyEDgk' },
+      { name: 'Wind in Trees', emoji: '🍃', videoId: 'dTPDs9ZMpAY' },
+      { name: 'Thunderstorm', emoji: '⚡', videoId: 'nDq6TstdEi8' },
+      { name: 'Jungle Sounds', emoji: '🌴', videoId: 'y3pjP4lMSMk' },
     ]
   },
   {
@@ -39,10 +42,11 @@ const SOUNDS = [
     emoji: '🎵',
     color: 'rgba(252,224,236,0.4)',
     tracks: [
-      { name: 'Lo-fi Beats', emoji: '🎧', url: 'https://assets.mixkit.co/music/preview/mixkit-dreaming-big-31.mp3' },
-      { name: 'Calm Piano', emoji: '🎹', url: 'https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3' },
-      { name: 'Deep Focus', emoji: '🔮', url: 'https://assets.mixkit.co/music/preview/mixkit-relaxing-in-nature-522.mp3' },
-      { name: 'Ambient Chill', emoji: '✨', url: 'https://assets.mixkit.co/music/preview/mixkit-valley-sunset-127.mp3' },
+      { name: 'Lo-fi Beats', emoji: '🎧', videoId: 'jfKfPfyJRdk' },
+      { name: 'Calm Piano', emoji: '🎹', videoId: 'UfcAVejslrU' },
+      { name: 'Study Music', emoji: '📚', videoId: '5qap5aO4i9A' },
+      { name: 'Ambient Chill', emoji: '✨', videoId: 'DWcJFNfaw9c' },
+      { name: 'Jazz Cafe', emoji: '🎷', videoId: 'Dx5qFachd3A' },
     ]
   },
   {
@@ -50,39 +54,23 @@ const SOUNDS = [
     emoji: '☕',
     color: 'rgba(232,223,248,0.4)',
     tracks: [
-      { name: 'Coffee Shop', emoji: '☕', url: 'https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3' },
-      { name: 'Fireplace', emoji: '🔥', url: 'https://assets.mixkit.co/active_storage/sfx/2523/2523-preview.mp3' },
-      { name: 'Library Ambience', emoji: '📚', url: 'https://assets.mixkit.co/music/preview/mixkit-life-is-a-dream-837.mp3' },
+      { name: 'Coffee Shop', emoji: '☕', videoId: 'h2zkV-l_more' },
+      { name: 'Fireplace', emoji: '🔥', videoId: 'L_LUpnjgPso' },
+      { name: 'Library Ambience', emoji: '📖', videoId: 'yzgX0fN5abc' },
+      { name: 'Rainy Cafe', emoji: '🌧️', videoId: 'BHACKCNDMW8' },
     ]
   },
 ]
 
 export default function Sounds() {
   const [playing, setPlaying] = useState(null)
-  const [volume, setVolume] = useState(0.5)
   const [activeCategory, setActiveCategory] = useState('All')
-  const audioRef = useRef(null)
-
-  useEffect(() => {
-    return () => { audioRef.current?.pause() }
-  }, [])
-
-  useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = volume
-  }, [volume])
 
   const playTrack = (track) => {
     if (playing?.name === track.name) {
-      audioRef.current?.pause()
       setPlaying(null)
       return
     }
-    if (audioRef.current) audioRef.current.pause()
-    const audio = new Audio(track.url)
-    audio.loop = true
-    audio.volume = volume
-    audio.play().catch(() => {})
-    audioRef.current = audio
     setPlaying(track)
   }
 
@@ -100,7 +88,7 @@ export default function Sounds() {
         <p style={{ color: '#8c7fa0', fontSize: '0.9rem' }}>Background sounds to help you focus, relax, and sleep better.</p>
       </motion.div>
 
-      {/* Now playing bar */}
+      {/* YouTube Player */}
       <AnimatePresence>
         {playing && (
           <motion.div
@@ -109,39 +97,39 @@ export default function Sounds() {
             exit={{ opacity: 0, y: -10 }}
             style={{
               background: 'linear-gradient(135deg, #a78bca, #c4a0d8)',
-              borderRadius: 16, padding: '14px 20px', marginBottom: 24,
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              flexWrap: 'wrap', gap: 12,
+              borderRadius: 20, padding: '20px 24px', marginBottom: 24,
             }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <motion.span
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-                style={{ fontSize: '1.4rem' }}>
-                {playing.emoji}
-              </motion.span>
-              <div>
-                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', marginBottom: 2 }}>Now Playing</p>
-                <p style={{ fontSize: '0.92rem', fontWeight: 600, color: 'white' }}>{playing.name}</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <motion.span
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  style={{ fontSize: '1.6rem' }}>
+                  {playing.emoji}
+                </motion.span>
+                <div>
+                  <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', marginBottom: 2 }}>Now Playing</p>
+                  <p style={{ fontSize: '1rem', fontWeight: 600, color: 'white' }}>{playing.name}</p>
+                </div>
               </div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)' }}>Vol</span>
-              <input
-                type="range" min="0" max="1" step="0.05"
-                value={volume}
-                onChange={e => setVolume(parseFloat(e.target.value))}
-                style={{ width: 80, accentColor: 'white', cursor: 'pointer' }}
-              />
               <button
-                onClick={() => { audioRef.current?.pause(); setPlaying(null) }}
+                onClick={() => setPlaying(null)}
                 style={{
                   background: 'rgba(255,255,255,0.2)', border: 'none',
-                  borderRadius: 50, padding: '6px 14px',
-                  color: 'white', cursor: 'pointer', fontSize: '0.8rem',
+                  borderRadius: 50, padding: '7px 16px',
+                  color: 'white', cursor: 'pointer', fontSize: '0.82rem',
                   fontFamily: '"DM Sans", sans-serif', fontWeight: 500,
                 }}>Stop</button>
             </div>
+            <iframe
+              key={playing.videoId}
+              width="100%"
+              height="80"
+              src={`https://www.youtube.com/embed/${playing.videoId}?autoplay=1&loop=1&playlist=${playing.videoId}&controls=1&modestbranding=1`}
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              style={{ borderRadius: 12, border: 'none' }}
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -162,7 +150,7 @@ export default function Sounds() {
         ))}
       </div>
 
-      {/* Sound categories */}
+      {/* Sound grid */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
         {filtered.map((section, si) => (
           <motion.div
@@ -174,7 +162,7 @@ export default function Sounds() {
               <span style={{ fontSize: '1.3rem' }}>{section.emoji}</span>
               <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '1.3rem', fontWeight: 600, color: '#2d2538' }}>{section.category}</p>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
               {section.tracks.map((track, ti) => {
                 const isPlaying = playing?.name === track.name
                 return (

@@ -10,7 +10,7 @@ const SOUNDS = [
       { name: 'Pure White Noise', emoji: '⬜', videoId: 'nMfPqeZjc2c' },
       { name: 'Brown Noise', emoji: '🟫', videoId: 'RqzGzwTY-6w' },
       { name: 'Pink Noise', emoji: '🌸', videoId: 'ZXtimhT-ff4' },
-      { name: 'Fan Noise', emoji: '🌀', videoId: 'L5R67SiAGpQ' },
+      { name: 'Fan Noise', emoji: '🌀', videoId: 'WcLVHCKmGnI' },
     ]
   },
   {
@@ -21,8 +21,8 @@ const SOUNDS = [
       { name: 'Gentle Rain', emoji: '🌦️', videoId: 'mPZkdNFkNps' },
       { name: 'Heavy Rain', emoji: '⛈️', videoId: 'q76bMs-NwRk' },
       { name: 'Ocean Waves', emoji: '🌊', videoId: 'bn9F19Hi1Lk' },
-      { name: 'River Stream', emoji: '🏞️', videoId: 'LNLkMHdVMiQ' },
-      { name: 'Rain on Window', emoji: '🪟', videoId: '8plwv6RkSqA' },
+      { name: 'River Stream', emoji: '🏞️', videoId: 'BcRSeEFlHD4' },
+      { name: 'Rain on Window', emoji: '🪟', videoId: 'gEWzxHoZPJo' },
     ]
   },
   {
@@ -31,10 +31,10 @@ const SOUNDS = [
     color: 'rgba(212,240,228,0.4)',
     tracks: [
       { name: 'Forest Birds', emoji: '🐦', videoId: 'Qm846KdZN_c' },
-      { name: 'Crickets Night', emoji: '🦗', videoId: 'eKmR4fyEDgk' },
-      { name: 'Wind in Trees', emoji: '🍃', videoId: 'dTPDs9ZMpAY' },
+      { name: 'Crickets Night', emoji: '🦗', videoId: 'bLOjBGjBA-k' },
+      { name: 'Wind in Trees', emoji: '🍃', videoId: 'H-iYeoXRNPQ' },
       { name: 'Thunderstorm', emoji: '⚡', videoId: 'nDq6TstdEi8' },
-      { name: 'Jungle Sounds', emoji: '🌴', videoId: 'y3pjP4lMSMk' },
+      { name: 'Jungle Sounds', emoji: '🌴', videoId: 'yIQd2Ya0Ziw' },
     ]
   },
   {
@@ -44,8 +44,8 @@ const SOUNDS = [
     tracks: [
       { name: 'Lo-fi Beats', emoji: '🎧', videoId: 'jfKfPfyJRdk' },
       { name: 'Calm Piano', emoji: '🎹', videoId: 'UfcAVejslrU' },
-      { name: 'Study Music', emoji: '📚', videoId: '5qap5aO4i9A' },
-      { name: 'Ambient Chill', emoji: '✨', videoId: 'DWcJFNfaw9c' },
+      { name: 'Study Music', emoji: '📚', videoId: 'lTRiuFIWV54' },
+      { name: 'Ambient Chill', emoji: '✨', videoId: '4oStw0r33so' },
       { name: 'Jazz Cafe', emoji: '🎷', videoId: 'Dx5qFachd3A' },
     ]
   },
@@ -56,7 +56,7 @@ const SOUNDS = [
     tracks: [
       { name: 'Coffee Shop', emoji: '☕', videoId: 'h2zkV-l_more' },
       { name: 'Fireplace', emoji: '🔥', videoId: 'L_LUpnjgPso' },
-      { name: 'Library Ambience', emoji: '📖', videoId: 'yzgX0fN5abc' },
+      { name: 'Library Ambience', emoji: '📖', videoId: 'xNN7iTA57jM' },
       { name: 'Rainy Cafe', emoji: '🌧️', videoId: 'BHACKCNDMW8' },
     ]
   },
@@ -88,7 +88,7 @@ export default function Sounds() {
         <p style={{ color: '#8c7fa0', fontSize: '0.9rem' }}>Background sounds to help you focus, relax, and sleep better.</p>
       </motion.div>
 
-      {/* YouTube Player */}
+      {/* Now playing bar - audio only, no video */}
       <AnimatePresence>
         {playing && (
           <motion.div
@@ -97,38 +97,49 @@ export default function Sounds() {
             exit={{ opacity: 0, y: -10 }}
             style={{
               background: 'linear-gradient(135deg, #a78bca, #c4a0d8)',
-              borderRadius: 20, padding: '20px 24px', marginBottom: 24,
+              borderRadius: 20, padding: '18px 24px', marginBottom: 24,
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              flexWrap: 'wrap', gap: 12,
             }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <motion.span
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                  style={{ fontSize: '1.6rem' }}>
-                  {playing.emoji}
-                </motion.span>
-                <div>
-                  <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', marginBottom: 2 }}>Now Playing</p>
-                  <p style={{ fontSize: '1rem', fontWeight: 600, color: 'white' }}>{playing.name}</p>
-                </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <motion.span
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                style={{ fontSize: '1.6rem' }}>
+                {playing.emoji}
+              </motion.span>
+              <div>
+                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', marginBottom: 2 }}>Now Playing</p>
+                <p style={{ fontSize: '1rem', fontWeight: 600, color: 'white' }}>{playing.name}</p>
               </div>
-              <button
-                onClick={() => setPlaying(null)}
-                style={{
-                  background: 'rgba(255,255,255,0.2)', border: 'none',
-                  borderRadius: 50, padding: '7px 16px',
-                  color: 'white', cursor: 'pointer', fontSize: '0.82rem',
-                  fontFamily: '"DM Sans", sans-serif', fontWeight: 500,
-                }}>Stop</button>
+              {/* Animated sound bars */}
+              <div style={{ display: 'flex', gap: 3, alignItems: 'flex-end', height: 20 }}>
+                {[0,1,2,3,4].map(i => (
+                  <motion.div key={i}
+                    animate={{ height: ['4px', '16px', '8px', '20px', '4px'] }}
+                    transition={{ repeat: Infinity, duration: 1, delay: i * 0.15 }}
+                    style={{ width: 3, background: 'rgba(255,255,255,0.7)', borderRadius: 2 }}
+                  />
+                ))}
+              </div>
             </div>
+            <button
+              onClick={() => setPlaying(null)}
+              style={{
+                background: 'rgba(255,255,255,0.2)', border: 'none',
+                borderRadius: 50, padding: '8px 20px',
+                color: 'white', cursor: 'pointer', fontSize: '0.84rem',
+                fontFamily: '"DM Sans", sans-serif', fontWeight: 500,
+              }}>Stop</button>
+
+            {/* Hidden iframe - audio only */}
             <iframe
               key={playing.videoId}
-              width="100%"
-              height="80"
-              src={`https://www.youtube.com/embed/${playing.videoId}?autoplay=1&loop=1&playlist=${playing.videoId}&controls=1&modestbranding=1`}
+              width="0"
+              height="0"
+              src={`https://www.youtube.com/embed/${playing.videoId}?autoplay=1&loop=1&playlist=${playing.videoId}&controls=0&modestbranding=1`}
               allow="autoplay; encrypted-media"
-              allowFullScreen
-              style={{ borderRadius: 12, border: 'none' }}
+              style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}
             />
           </motion.div>
         )}

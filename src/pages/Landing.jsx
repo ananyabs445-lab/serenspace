@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import Particles from 'react-tsparticles'
-import { loadFull } from 'tsparticles'
-import { useCallback } from 'react'
+import Particles, { initParticlesEngine } from '@tsparticles/react'
+import { loadSlim } from '@tsparticles/slim'
+import { useCallback, useEffect, useState } from 'react'
 
 const features = [
   { icon: '🌷', title: 'Daily Affirmations', desc: 'Positive affirmations for focus, confidence.' },
-  { icon: '🥀', title: 'Breathing Exercises', desc: 'Box breathing and deep breathing techniques.' },
+  { icon: '🌬️', title: 'Breathing Exercises', desc: 'Box breathing and deep breathing techniques.' },
   { icon: '💌', title: 'Mood Journal', desc: 'Track how you feel each day with emoji check-ins.' },
   { icon: '🎧', title: 'Focus Timer', desc: 'Timer to help you study smarter.' },
   { icon: '🧸', title: 'Progress Streaks', desc: 'Stay consistent with daily session counts.' },
@@ -17,54 +17,62 @@ const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
 const item = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } }
 
 export default function Landing() {
-  const particlesInit = useCallback(async (engine) => {
-    await loadFull(engine)
+  const [init, setInit] = useState(false)
+
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadSlim(engine)
+    }).then(() => setInit(true))
   }, [])
+
+  const particlesLoaded = useCallback(async () => {}, [])
 
   return (
     <div style={{ position: 'relative', zIndex: 1 }}>
 
       {/* Particles */}
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        options={{
-          fullScreen: { enable: false },
-          background: { color: { value: 'transparent' } },
-          fpsLimit: 60,
-          particles: {
-            number: { value: 40, density: { enable: true, area: 800 } },
-            color: { value: ['#a78bca', '#c4a0d8', '#fce0ec', '#c8e8f8', '#d4f0e4'] },
-            shape: { type: 'circle' },
-            opacity: { value: 0.4, random: true, animation: { enable: true, speed: 0.5, minimumValue: 0.1 } },
-            size: { value: 3, random: true, animation: { enable: true, speed: 1, minimumValue: 0.5 } },
-            move: {
-              enable: true, speed: 0.6, direction: 'none',
-              random: true, straight: false, outModes: 'out',
+      {init && (
+        <Particles
+          id="tsparticles"
+          particlesLoaded={particlesLoaded}
+          options={{
+            fullScreen: { enable: false },
+            background: { color: { value: 'transparent' } },
+            fpsLimit: 60,
+            particles: {
+              number: { value: 40, density: { enable: true, area: 800 } },
+              color: { value: ['#a78bca', '#c4a0d8', '#fce0ec', '#c8e8f8', '#d4f0e4'] },
+              shape: { type: 'circle' },
+              opacity: { value: 0.4, random: true, animation: { enable: true, speed: 0.5, minimumValue: 0.1 } },
+              size: { value: 3, random: true, animation: { enable: true, speed: 1, minimumValue: 0.5 } },
+              move: {
+                enable: true, speed: 0.6, direction: 'none',
+                random: true, straight: false, outModes: 'out',
+              },
+              links: {
+                enable: true, distance: 120, color: '#a78bca',
+                opacity: 0.15, width: 1,
+              },
             },
-            links: {
-              enable: true, distance: 120, color: '#a78bca',
-              opacity: 0.15, width: 1,
+            interactivity: {
+              events: {
+                onHover: { enable: true, mode: 'repulse' },
+                onClick: { enable: true, mode: 'push' },
+              },
+              modes: {
+                repulse: { distance: 80, duration: 0.4 },
+                push: { quantity: 2 },
+              },
             },
-          },
-          interactivity: {
-            events: {
-              onHover: { enable: true, mode: 'repulse' },
-              onClick: { enable: true, mode: 'push' },
-            },
-            modes: {
-              repulse: { distance: 80, duration: 0.4 },
-              push: { quantity: 2 },
-            },
-          },
-          detectRetina: true,
-        }}
-        style={{
-          position: 'fixed', top: 0, left: 0,
-          width: '100%', height: '100%',
-          zIndex: 0, pointerEvents: 'none',
-        }}
-      />
+            detectRetina: true,
+          }}
+          style={{
+            position: 'fixed', top: 0, left: 0,
+            width: '100%', height: '100%',
+            zIndex: 0, pointerEvents: 'none',
+          }}
+        />
+      )}
 
       {/* Hero */}
       <section style={{
@@ -74,13 +82,11 @@ export default function Landing() {
         textAlign: 'center', padding: '120px 24px 60px',
         position: 'relative', zIndex: 1,
       }}>
-        {/* Decorative blobs */}
         <div style={{ position: 'fixed', top: '15%', left: '5%', width: 200, height: 200, borderRadius: '50%', background: 'rgba(167,139,202,0.12)', filter: 'blur(60px)', pointerEvents: 'none' }} />
         <div style={{ position: 'fixed', top: '30%', right: '8%', width: 250, height: 250, borderRadius: '50%', background: 'rgba(252,224,236,0.2)', filter: 'blur(70px)', pointerEvents: 'none' }} />
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
 
-          {/* Floating aesthetic emojis */}
           <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             style={{ position: 'absolute', top: '18%', left: '12%', fontSize: '1.8rem', opacity: 0.6, pointerEvents: 'none' }}>
             🐇
@@ -176,7 +182,6 @@ export default function Landing() {
           ))}
         </motion.div>
 
-        {/* Bottom CTA */}
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           style={{ textAlign: 'center', marginTop: 72 }}>
           <Link to="/signup" className="btn-primary" style={{ padding: '14px 36px', fontSize: '0.95rem' }}>

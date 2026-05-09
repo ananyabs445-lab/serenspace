@@ -45,6 +45,7 @@ export default function NavBar() {
               { path: '/timer',  label: 'Focus' },
               { path: '/sounds', label: 'Sounds' },
               { path: '/habits', label: 'Habits' },
+              { path: '/meditation', label: 'Meditate' },
             ].map(({ path, label }) => (
               <Link key={path} to={path} style={{
                 padding: '7px 14px', borderRadius: 50,

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Lottie from 'lottie-react'
 
 const SESSIONS = [
   {
@@ -64,62 +63,58 @@ const SESSIONS = [
   },
 ]
 
-const LOTTIE_URLS = {
-  'Mountain Pose': 'https://assets9.lottiefiles.com/packages/lf20_vwcugezu.json',
-  'Sun Salutation': 'https://assets9.lottiefiles.com/packages/lf20_kcsr6fts.json',
-  'Warrior I': 'https://assets9.lottiefiles.com/packages/lf20_tutvdkg0.json',
-  'Tree Pose': 'https://assets9.lottiefiles.com/packages/lf20_vwcugezu.json',
-  "Child's Pose": 'https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json',
-  'Cat-Cow Stretch': 'https://assets9.lottiefiles.com/packages/lf20_szlepvdh.json',
-  'Seated Forward Fold': 'https://assets9.lottiefiles.com/packages/lf20_szlepvdh.json',
-  'Legs Up The Wall': 'https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json',
-  'Corpse Pose': 'https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json',
-  'Easy Pose': 'https://assets9.lottiefiles.com/packages/lf20_vwcugezu.json',
-  'Seated Meditation': 'https://assets9.lottiefiles.com/packages/lf20_vwcugezu.json',
-  'Happy Baby': 'https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json',
-  'Butterfly Pose': 'https://assets9.lottiefiles.com/packages/lf20_szlepvdh.json',
-  'Supine Twist': 'https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json',
-  'Eagle Pose': 'https://assets9.lottiefiles.com/packages/lf20_tutvdkg0.json',
-  'Warrior III': 'https://assets9.lottiefiles.com/packages/lf20_tutvdkg0.json',
+const POSE_IMAGES = {
+  'Mountain Pose': 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=400&q=80',
+  'Sun Salutation': 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&q=80',
+  'Warrior I': 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=400&q=80',
+  'Tree Pose': 'https://images.unsplash.com/photo-1603988363607-e1e4a66962c6?w=400&q=80',
+  "Child's Pose": 'https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=400&q=80',
+  'Cat-Cow Stretch': 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=80',
+  'Seated Forward Fold': 'https://images.unsplash.com/photo-1510894347713-fc3dc6166086?w=400&q=80',
+  'Legs Up The Wall': 'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=400&q=80',
+  'Corpse Pose': 'https://images.unsplash.com/photo-1506126279646-a697353d3166?w=400&q=80',
+  'Easy Pose': 'https://images.unsplash.com/photo-1545389336-cf090694435e?w=400&q=80',
+  'Seated Meditation': 'https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?w=400&q=80',
+  'Happy Baby': 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&q=80',
+  'Butterfly Pose': 'https://images.unsplash.com/photo-1510894347713-fc3dc6166086?w=400&q=80',
+  'Supine Twist': 'https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=400&q=80',
+  'Eagle Pose': 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=400&q=80',
+  'Warrior III': 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=400&q=80',
 }
 
 function PoseAnimation({ poseName }) {
-  const [animationData, setAnimationData] = useState(null)
-  const [error, setError] = useState(false)
-
-  useEffect(() => {
-    setAnimationData(null)
-    setError(false)
-    const url = LOTTIE_URLS[poseName] || LOTTIE_URLS['Mountain Pose']
-    fetch(url)
-      .then(r => r.json())
-      .then(data => setAnimationData(data))
-      .catch(() => setError(true))
-  }, [poseName])
-
-  if (error) return (
-    <motion.div
-      animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
-      transition={{ repeat: Infinity, duration: 3 }}
-      style={{ fontSize: '4rem' }}>
-      🧘
-    </motion.div>
-  )
-
-  if (!animationData) return (
-    <motion.div
-      animate={{ rotate: 360 }}
-      transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-      style={{ width: 32, height: 32, borderRadius: '50%', border: '3px solid #a78bca', borderTopColor: 'transparent' }}
-    />
-  )
+  const [loaded, setLoaded] = useState(false)
+  const url = POSE_IMAGES[poseName] || POSE_IMAGES['Mountain Pose']
 
   return (
-    <Lottie
-      animationData={animationData}
-      loop={true}
-      style={{ width: 150, height: 150 }}
-    />
+    <div style={{ position: 'relative', width: 180, height: 180, borderRadius: '50%', overflow: 'hidden' }}>
+      {!loaded && (
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(167,139,202,0.1)' }}>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+            style={{ width: 32, height: 32, borderRadius: '50%', border: '3px solid #a78bca', borderTopColor: 'transparent' }}
+          />
+        </div>
+      )}
+      <motion.img
+        src={url}
+        alt={poseName}
+        onLoad={() => setLoaded(true)}
+        initial={{ scale: 1.1 }}
+        animate={{ scale: loaded ? [1.05, 1, 1.05] : 1.1 }}
+        transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut' }}
+        style={{
+          width: '100%', height: '100%',
+          objectFit: 'cover',
+          display: loaded ? 'block' : 'none',
+        }}
+      />
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(135deg, rgba(167,139,202,0.25), rgba(196,160,216,0.15))',
+      }} />
+    </div>
   )
 }
 
@@ -271,14 +266,7 @@ export default function Meditation() {
               className="glass-card-static" style={{ padding: '40px 32px', marginBottom: 20, textAlign: 'center' }}>
 
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-                <div style={{
-                  width: 180, height: 180, borderRadius: '50%',
-                  background: 'linear-gradient(135deg, rgba(167,139,202,0.1), rgba(196,160,216,0.15))',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: '2px solid rgba(167,139,202,0.2)',
-                }}>
-                  <PoseAnimation poseName={pose.name} />
-                </div>
+                <PoseAnimation poseName={pose.name} />
               </div>
 
               <p style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#a78bca', marginBottom: 6 }}>

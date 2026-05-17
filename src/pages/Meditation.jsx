@@ -10,11 +10,11 @@ const SESSIONS = [
     duration: '10 min',
     color: 'rgba(252,224,236,0.5)',
     poses: [
-      { name: 'Mountain Pose', sanskrit: 'Tadasana', duration: 30, benefit: 'Improves posture and balance', instructions: 'Stand tall, feet together, arms at sides, breathe deeply', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Tadasana_Yoga-Asana_Nina-Mel.jpg/440px-Tadasana_Yoga-Asana_Nina-Mel.jpg' },
-      { name: 'Sun Salutation', sanskrit: 'Surya Namaskar', duration: 45, benefit: 'Energizes entire body', instructions: 'Flow through forward fold, plank, cobra, and back up', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Surya_namaskar.jpg/440px-Surya_namaskar.jpg' },
-      { name: 'Warrior I', sanskrit: 'Virabhadrasana I', duration: 30, benefit: 'Builds strength and focus', instructions: 'Step one foot back, bend front knee, raise arms overhead', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Warrior_I_Pose_-_Virabhadrasana_I.jpg/440px-Warrior_I_Pose_-_Virabhadrasana_I.jpg' },
-      { name: 'Tree Pose', sanskrit: 'Vrikshasana', duration: 30, benefit: 'Improves balance and concentration', instructions: 'Stand on one leg, place other foot on inner thigh, hands in prayer', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Vriksasana_Yoga-Asana_Nina-Mel.jpg/440px-Vriksasana_Yoga-Asana_Nina-Mel.jpg' },
-      { name: "Child's Pose", sanskrit: 'Balasana', duration: 45, benefit: 'Calms the mind and relieves stress', instructions: 'Kneel, sit back on heels, extend arms forward, rest forehead down', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Balasana_Yoga-Asana_Nina-Mel.jpg/440px-Balasana_Yoga-Asana_Nina-Mel.jpg' },
+      { name: 'Mountain Pose', sanskrit: 'Tadasana', duration: 30, benefit: 'Improves posture and balance', instructions: 'Stand tall, feet together, arms at sides, breathe deeply', icon: '🏔️', color: '#fce0ec' },
+      { name: 'Sun Salutation', sanskrit: 'Surya Namaskar', duration: 45, benefit: 'Energizes entire body', instructions: 'Flow through forward fold, plank, cobra, and back up', icon: '☀️', color: '#fff3cd' },
+      { name: 'Warrior I', sanskrit: 'Virabhadrasana I', duration: 30, benefit: 'Builds strength and focus', instructions: 'Step one foot back, bend front knee, raise arms overhead', icon: '⚡', color: '#e8dff8' },
+      { name: 'Tree Pose', sanskrit: 'Vrikshasana', duration: 30, benefit: 'Improves balance and concentration', instructions: 'Stand on one leg, place other foot on inner thigh, hands in prayer', icon: '🌳', color: '#d4f0e4' },
+      { name: "Child's Pose", sanskrit: 'Balasana', duration: 45, benefit: 'Calms the mind and relieves stress', instructions: 'Kneel, sit back on heels, extend arms forward, rest forehead down', icon: '🌸', color: '#fce0ec' },
     ]
   },
   {
@@ -25,11 +25,11 @@ const SESSIONS = [
     duration: '8 min',
     color: 'rgba(212,240,228,0.5)',
     poses: [
-      { name: "Child's Pose", sanskrit: 'Balasana', duration: 60, benefit: 'Deeply relaxes the nervous system', instructions: 'Kneel, sit back on heels, extend arms forward, breathe slowly', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Balasana_Yoga-Asana_Nina-Mel.jpg/440px-Balasana_Yoga-Asana_Nina-Mel.jpg' },
-      { name: 'Cat-Cow Stretch', sanskrit: 'Marjaryasana', duration: 45, benefit: 'Releases spine tension', instructions: 'On hands and knees, alternate arching and rounding your back', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Marjariasana.jpg/440px-Marjariasana.jpg' },
-      { name: 'Seated Forward Fold', sanskrit: 'Paschimottanasana', duration: 45, benefit: 'Calms anxiety and stress', instructions: 'Sit with legs extended, reach forward toward your feet, breathe', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Paschimottanasana_Yoga-Asana_Nina-Mel.jpg/440px-Paschimottanasana_Yoga-Asana_Nina-Mel.jpg' },
-      { name: 'Legs Up The Wall', sanskrit: 'Viparita Karani', duration: 60, benefit: 'Reduces stress and fatigue instantly', instructions: 'Lie on back, extend legs up against wall, relax completely', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Viparita_Karani.jpg/440px-Viparita_Karani.jpg' },
-      { name: 'Corpse Pose', sanskrit: 'Savasana', duration: 90, benefit: 'Complete relaxation of body and mind', instructions: 'Lie flat on back, arms at sides, eyes closed, breathe naturally', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Shavasana_Yoga-Asana_Nina-Mel.jpg/440px-Shavasana_Yoga-Asana_Nina-Mel.jpg' },
+      { name: "Child's Pose", sanskrit: 'Balasana', duration: 60, benefit: 'Deeply relaxes the nervous system', instructions: 'Kneel, sit back on heels, extend arms forward, breathe slowly', icon: '🌸', color: '#fce0ec' },
+      { name: 'Cat-Cow Stretch', sanskrit: 'Marjaryasana', duration: 45, benefit: 'Releases spine tension', instructions: 'On hands and knees, alternate arching and rounding your back', icon: '🐱', color: '#d4f0e4' },
+      { name: 'Seated Forward Fold', sanskrit: 'Paschimottanasana', duration: 45, benefit: 'Calms anxiety and stress', instructions: 'Sit with legs extended, reach forward toward your feet, breathe', icon: '🌊', color: '#c8e8f8' },
+      { name: 'Legs Up The Wall', sanskrit: 'Viparita Karani', duration: 60, benefit: 'Reduces stress and fatigue instantly', instructions: 'Lie on back, extend legs up against wall, relax completely', icon: '🕊️', color: '#e8dff8' },
+      { name: 'Corpse Pose', sanskrit: 'Savasana', duration: 90, benefit: 'Complete relaxation of body and mind', instructions: 'Lie flat on back, arms at sides, eyes closed, breathe naturally', icon: '🌙', color: '#e8dff8' },
     ]
   },
   {
@@ -40,10 +40,10 @@ const SESSIONS = [
     duration: '7 min',
     color: 'rgba(200,232,248,0.5)',
     poses: [
-      { name: 'Easy Pose', sanskrit: 'Sukhasana', duration: 60, benefit: 'Centers the mind for focus', instructions: 'Sit cross-legged, spine tall, hands on knees, eyes closed', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/thirty/Sukhasana_Yoga-Asana_Nina-Mel.jpg/440px-Sukhasana_Yoga-Asana_Nina-Mel.jpg' },
-      { name: 'Eagle Pose', sanskrit: 'Garudasana', duration: 30, benefit: 'Improves concentration', instructions: 'Stand, cross one leg over other, wrap arms, focus on one point', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Garudasana_Yoga-Asana_Nina-Mel.jpg/440px-Garudasana_Yoga-Asana_Nina-Mel.jpg' },
-      { name: 'Warrior III', sanskrit: 'Virabhadrasana III', duration: 30, benefit: 'Builds mental strength', instructions: 'Balance on one leg, extend body parallel to floor, arms forward', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Virabhadrasana_III_Yoga-Asana_Nina-Mel.jpg/440px-Virabhadrasana_III_Yoga-Asana_Nina-Mel.jpg' },
-      { name: 'Seated Meditation', sanskrit: 'Dhyana', duration: 120, benefit: 'Clears mental clutter', instructions: 'Sit comfortably, close eyes, focus only on your breath', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/thirty/Sukhasana_Yoga-Asana_Nina-Mel.jpg/440px-Sukhasana_Yoga-Asana_Nina-Mel.jpg' },
+      { name: 'Easy Pose', sanskrit: 'Sukhasana', duration: 60, benefit: 'Centers the mind for focus', instructions: 'Sit cross-legged, spine tall, hands on knees, eyes closed', icon: '🧘', color: '#e8dff8' },
+      { name: 'Eagle Pose', sanskrit: 'Garudasana', duration: 30, benefit: 'Improves concentration', instructions: 'Stand, cross one leg over other, wrap arms, focus on one point', icon: '🦅', color: '#c8e8f8' },
+      { name: 'Warrior III', sanskrit: 'Virabhadrasana III', duration: 30, benefit: 'Builds mental strength', instructions: 'Balance on one leg, extend body parallel to floor, arms forward', icon: '⚡', color: '#e8dff8' },
+      { name: 'Seated Meditation', sanskrit: 'Dhyana', duration: 120, benefit: 'Clears mental clutter', instructions: 'Sit comfortably, close eyes, focus only on your breath', icon: '✨', color: '#fce0ec' },
     ]
   },
   {
@@ -54,59 +54,95 @@ const SESSIONS = [
     duration: '12 min',
     color: 'rgba(232,223,248,0.5)',
     poses: [
-      { name: 'Butterfly Pose', sanskrit: 'Baddha Konasana', duration: 60, benefit: 'Releases hip tension from sitting', instructions: 'Sit, bring soles of feet together, gently flutter knees up and down', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Baddha_Konasana_Yoga-Asana_Nina-Mel.jpg/440px-Baddha_Konasana_Yoga-Asana_Nina-Mel.jpg' },
-      { name: 'Supine Twist', sanskrit: 'Supta Matsyendrasana', duration: 45, benefit: 'Releases spine and promotes sleep', instructions: 'Lie on back, bring knee to chest, cross it over body, arms spread', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Supta_Matsyendrasana_Yoga-Asana_Nina-Mel.jpg/440px-Supta_Matsyendrasana_Yoga-Asana_Nina-Mel.jpg' },
-      { name: 'Happy Baby', sanskrit: 'Ananda Balasana', duration: 45, benefit: 'Calms the nervous system', instructions: 'Lie on back, grab outer feet, gently rock side to side', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Ananda_Balasana_Yoga-Asana_Nina-Mel.jpg/440px-Ananda_Balasana_Yoga-Asana_Nina-Mel.jpg' },
-      { name: 'Legs Up The Wall', sanskrit: 'Viparita Karani', duration: 90, benefit: 'Reduces anxiety before sleep', instructions: 'Lie on back, legs up against wall, breathe slowly for full duration', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Viparita_Karani.jpg/440px-Viparita_Karani.jpg' },
-      { name: 'Corpse Pose', sanskrit: 'Savasana', duration: 120, benefit: 'Prepares body for sleep', instructions: 'Lie completely still, scan body from toes to head, release all tension', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Shavasana_Yoga-Asana_Nina-Mel.jpg/440px-Shavasana_Yoga-Asana_Nina-Mel.jpg' },
+      { name: 'Butterfly Pose', sanskrit: 'Baddha Konasana', duration: 60, benefit: 'Releases hip tension from sitting', instructions: 'Sit, bring soles of feet together, gently flutter knees up and down', icon: '🦋', color: '#e8dff8' },
+      { name: 'Supine Twist', sanskrit: 'Supta Matsyendrasana', duration: 45, benefit: 'Releases spine and promotes sleep', instructions: 'Lie on back, bring knee to chest, cross it over body, arms spread', icon: '🌀', color: '#c8e8f8' },
+      { name: 'Happy Baby', sanskrit: 'Ananda Balasana', duration: 45, benefit: 'Calms the nervous system', instructions: 'Lie on back, grab outer feet, gently rock side to side', icon: '🌷', color: '#fce0ec' },
+      { name: 'Legs Up The Wall', sanskrit: 'Viparita Karani', duration: 90, benefit: 'Reduces anxiety before sleep', instructions: 'Lie on back, legs up against wall, breathe slowly for full duration', icon: '🕊️', color: '#e8dff8' },
+      { name: 'Corpse Pose', sanskrit: 'Savasana', duration: 120, benefit: 'Prepares body for sleep', instructions: 'Lie completely still, scan body from toes to head, release all tension', icon: '🌙', color: '#e8dff8' },
     ]
   },
 ]
 
-function PoseImage({ src, name }) {
-  const [loaded, setLoaded] = useState(false)
-  const [error, setError] = useState(false)
-
+function PoseVisual({ pose, progress }) {
   return (
-    <div style={{
-      position: 'relative', width: 200, height: 200,
-      borderRadius: '50%', overflow: 'hidden',
-      border: '3px solid rgba(167,139,202,0.3)',
-      boxShadow: '0 8px 32px rgba(167,139,202,0.2)',
-    }}>
-      {!loaded && !error && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(167,139,202,0.08)' }}>
-          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-            style={{ width: 32, height: 32, borderRadius: '50%', border: '3px solid #a78bca', borderTopColor: 'transparent' }} />
-        </div>
-      )}
-      {error && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(167,139,202,0.08)' }}>
-          <p style={{ fontSize: '3rem' }}>🧘</p>
-          <p style={{ fontSize: '0.7rem', color: '#a78bca', textAlign: 'center', padding: '0 12px' }}>{name}</p>
-        </div>
-      )}
-      {!error && (
-        <motion.img
-          src={src}
-          alt={name}
-          onLoad={() => setLoaded(true)}
-          onError={() => setError(true)}
-          animate={loaded ? { scale: [1.05, 1, 1.05] } : { scale: 1.1 }}
-          transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut' }}
+    <div style={{ position: 'relative', width: 200, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+      {/* Outer breathing ring */}
+      <motion.div
+        animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.1, 0.3] }}
+        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+        style={{
+          position: 'absolute', width: 200, height: 200, borderRadius: '50%',
+          border: '2px solid rgba(167,139,202,0.4)',
+        }}
+      />
+
+      {/* Middle ring */}
+      <motion.div
+        animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.2, 0.5] }}
+        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', delay: 0.5 }}
+        style={{
+          position: 'absolute', width: 160, height: 160, borderRadius: '50%',
+          border: '2px solid rgba(167,139,202,0.5)',
+        }}
+      />
+
+      {/* Progress ring SVG */}
+      <svg width="200" height="200" style={{ position: 'absolute', transform: 'rotate(-90deg)' }}>
+        <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(167,139,202,0.1)" strokeWidth="4" />
+        <motion.circle
+          cx="100" cy="100" r="90"
+          fill="none"
+          stroke="url(#poseGrad)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={2 * Math.PI * 90}
+          animate={{ strokeDashoffset: 2 * Math.PI * 90 * (1 - progress / 100) }}
+          transition={{ duration: 0.5 }}
+        />
+        <defs>
+          <linearGradient id="poseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#a78bca" />
+            <stop offset="100%" stopColor="#c4a0d8" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      {/* Center circle with icon */}
+      <motion.div
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+        style={{
+          width: 120, height: 120, borderRadius: '50%',
+          background: `linear-gradient(135deg, ${pose.color}, rgba(167,139,202,0.2))`,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 8px 32px rgba(167,139,202,0.25)',
+          zIndex: 1,
+        }}>
+        <motion.span
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+          style={{ fontSize: '2.8rem', lineHeight: 1 }}>
+          {pose.icon}
+        </motion.span>
+      </motion.div>
+
+      {/* Floating particles */}
+      {[0, 1, 2, 3].map(i => (
+        <motion.div key={i}
+          animate={{
+            x: [0, Math.cos(i * 90 * Math.PI / 180) * 30, 0],
+            y: [0, Math.sin(i * 90 * Math.PI / 180) * 30, 0],
+            opacity: [0, 0.6, 0],
+          }}
+          transition={{ repeat: Infinity, duration: 3, delay: i * 0.7, ease: 'easeInOut' }}
           style={{
-            width: '100%', height: '100%',
-            objectFit: 'cover',
-            opacity: loaded ? 1 : 0,
-            transition: 'opacity 0.3s',
+            position: 'absolute', width: 6, height: 6,
+            borderRadius: '50%', background: '#a78bca',
           }}
         />
-      )}
-      {/* Purple overlay */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(135deg, rgba(167,139,202,0.2), rgba(196,160,216,0.1))',
-      }} />
+      ))}
     </div>
   )
 }
@@ -259,7 +295,7 @@ export default function Meditation() {
               className="glass-card-static" style={{ padding: '40px 32px', marginBottom: 20, textAlign: 'center' }}>
 
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
-                <PoseImage src={pose.image} name={pose.name} />
+                <PoseVisual pose={pose} progress={progress} />
               </div>
 
               <p style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#a78bca', marginBottom: 6 }}>
